@@ -42,11 +42,4 @@ object Main extends App {
   // ｢!｣メソッド(Bangと読むらしい)はtellメソッドのシンタックスシュガー。
   // 以下はprintHelloActor.tell(message)と同じ。
   printHelloActor ! message
-
-  // printHelloActorはメッセージにHelloクラスのインスタンスしか受け付けないので、
-  // 以下のように別の型を送信しようとするとコンパイルエラーになる。
-  // 2.6より前はこれがコンパイルエラーにならなかった(メッセージは全部Any型として処理されてたため)。
-  /*
-    printHelloActor ! "Hello World!"
-  */
 }
