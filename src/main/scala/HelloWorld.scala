@@ -1,5 +1,41 @@
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorSystem, Behavior}
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.server.Directives.{complete, get, path}
+
+import scala.io.StdIn
+
+object HttpServer {
+
+  def main(args: Array[String]): Unit = {
+
+    implicit val system = ActorSystem(Behaviors.empty, "http-server")
+
+    implicit val executionContext = system.executionContext
+
+    val route =
+      path("hello") {
+        get {
+          complete(HttpEntity(
+            ContentTypes.`text/html(UTF-8)`,
+            "<h1>Hello, this is http-server</h1>"
+          ))
+        }
+      }
+
+    val host = "localhost"
+    val port = 8080
+
+    val bindingFuture = Http().newServerAt(host, port).bind(route)
+
+    println(s"Server online at http://localhost:8080/hello\nPress RETURN to stop...")
+    StdIn.readLine()
+    bindingFuture
+      .flatMap(_.unbind()) // port をアンバインド
+      .onComplete(_ => system.terminate()) // system を停止
+  }
+}
 
 // アクターに送信するメッセージ用のクラス。
 // StringやIntのようなプリミティブな型を直接送信することもできるが、
