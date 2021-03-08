@@ -1,3 +1,9 @@
 *.class
 *.log
 target/
+
+# for Metals
+.metals/
+.bloop/
+.ammonite/
+metals.sbt
